@@ -1,0 +1,16 @@
+<div class="login-container">
+  <div class="card">
+    <div class="form-group">
+      <label>Konto:</label>
+      <select class="form-control" [(ngModel)]="selectedAcct" name="selectedAcct">
+        <option *ngFor="let acctItem of accts" [value]="acctItem" >{{acctItem}}</option>
+      </select>
+      <button class="btn btn-primary" (click)="login()">Zaloguj</button>
+      <p>
+      <ngb-alert type="danger" [dismissible]="false" *ngIf="acctValid.err">
+        {{acctValid.errMsg}}
+      </ngb-alert>
+      </p>
+    </div>
+  </div>
+</div>

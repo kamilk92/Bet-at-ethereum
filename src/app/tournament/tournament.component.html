@@ -1,0 +1,7 @@
+<div class="card" *ngFor="let singleTournament of tournaments">
+     <div class="card-header">{{singleTournament.name}}</div>
+  <div class="card-body">{{singleTournament.description}}</div>
+  <div class="btn-group">
+    <a class="btn btn-link" (click)="selectTournament(singleTournament)">Szczegóły</a>
+  </div>
+</div>

@@ -1,0 +1,257 @@
+<div class="card-container">
+  <div class="progress" [hidden]="actionReadiness['tournament']">
+    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+      Ładowanie
+    </div>
+  </div>
+  <div class="card">
+    <div class="alert alert-danger" *ngIf="tournamentModel.ended">Turniej został już zakończony.</div>
+    <ngb-tabset #t="ngbTabset">
+      <ngb-tab id="tab-selectbyid1" title="Dołącz" *ngIf="(!tournamentModel.isParticipant) && (!tournamentModel.ended)">
+        <ng-template ngbTabContent>
+          <h4>Dołącz do turnieju</h4>
+          <p>Aktualnie nie jesteś członkiem turnieju. Aby dołączyć do typowania
+            wypełnij i wyślij poniższy formularz. Przed wysłaniem formularza upewnij
+            się, że zapoznałeś się z regulaminem oraz jesteś zalogowany do konta,
+            które chcesz zgłosić w turnieju.</p>
+          <hr />
+          Koszt dołączenia: <b>{{tournamentModel.joinCost}} WEI</b> 
+          <hr />
+          <div>
+            <form (ngSubmit)="joinToTournament()" #joinTournamentForm="ngForm">
+              <div class="form-group">
+                <label><b>Pseudonim</b></label> (od 5, do 20 znaków)
+                <p>Pod tą nazwą będziesz identyfikowany w rankingu, oraz widoczny dla innych graczy.</p>
+                <input class="form-control" 
+                       type="text" 
+                       required 
+                       [(ngModel)]="joinTournamentModel.nick" 
+                       name="nick"
+                       minlength="5" 
+                       maxlength="20" 
+                       #nick="ngModel" />
+              </div>
+              <div class="alert alert-danger" *ngIf="nick.invalid">
+                <div *ngIf="nick.errors.required">Pole jest wymagane.</div>
+                <div *ngIf="nick.errors.minlength || nick.errors.maxlength">
+                  Pseudonim musi mieć co najmniej 5 i maksymalnie 20 znaków.
+              </div>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Wyślij" [disabled]="!joinTournamentForm.form.valid"/>
+            <div class="alert alert-danger" *ngIf="isParticipantResult.isError">
+              {{isParticipantResult.errMsg}}
+            </div>
+            <div class="alert alert-success" *ngIf="isParticipantResult.isSuccess">
+              {{isParticipantResult.succMsg}}
+            </div>
+          </form>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="tab-selectbyid2" title="Typuj" *ngIf="tournamentModel.isParticipant">
+      <ng-template ngbTabContent>
+        <h4>Typuj</h4>
+        <div class="btn-container" *ngIf="tournamentModel.isArbiter">
+          <button class="btn btn-primary btn-sm" (click)="openEndTournamentModal(endTournamentModal)">Zakończ turniej</button>
+        </div>
+        <div class="alert alert-success" *ngIf="getMatchesResult.isSuccess">
+          {{getMatchesResult.succMsg}}
+        </div>
+        <div class="alert alert-danger" *ngIf="getMatchesResult.isError">
+          {{getMatchesResult.errMsg}}
+        </div>
+        <div class="form-group match-row" *ngFor="let match of matchModels; let i = index">
+             <div><strong>{{match.beginDate | date: "dd-MM-yyyy HH:mm:ss"}}</strong></div>
+          <form class="form-inline match-result {{matchResults[matchModels[i].id].hitClass}}">
+            <div class="form-group">
+              <label class="control-label col-sm-3">{{match.host}}</label>
+              <div class="col-sm-2">
+                <input type="number" class="form-control text-center" [(ngModel)]="matchModels[i].hostScore" name="hostScore"/>
+              </div>
+              <div class="col-sm-2">
+                <input type="number" class="form-control text-center" [(ngModel)]="matchModels[i].guestScore" name="guestScore"/>
+              </div>
+              <label class="control-label col-sm-3">{{match.guest}}</label>
+              <div class="col-sm-1">
+                <button class="btn btn-primary" type="submit" (click)="addBet(i)" [disabled]="(matchModels[i].ended) || (!actionReadiness.addBet)">Zapisz</button>
+                <button class="btn btn-primary" type="submit" (click)="resolveMatch(i)" [disabled]="(!actionReadiness.addBet) || matchModels[i].ended" *ngIf="tournamentModel.isArbiter">Rozstrzygnij</button>
+              </div>
+              <div class="alert alert-danger" *ngIf="addMatchBetResults[matchModels[i].id].isError">
+                {{addMatchBetResults[matchModels[i].id].errMsg}}
+              </div>
+              <div class="alert alert-success" *ngIf="addMatchBetResults[matchModels[i].id].isSuccess">
+                {{addMatchBetResults[matchModels[i].id].succMsg}}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-3">Rezultat meczu</label>
+              <div class="col-sm-2 text-center">
+                {{matchResults[matchModels[i].id].hostScore}}
+              </div>
+              <div class="col-sm-2 text-center">
+                {{matchResults[matchModels[i].id].guestScore}}
+              </div>
+              <label class="control-label col-sm-3"></label>
+              <div class="col-sm-1"></div>
+            </div>
+            <div class="points-box text-center" *ngIf="matchModels[i].ended">
+              <div class="points">
+                <span>{{matchModels[i].points || 0}} punktów</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="tab-selectbyid3" title="Dodaj mecz" *ngIf="tournamentModel.isArbiter">
+      <ng-template ngbTabContent>
+        <h4>Dodaj mecz</h4>
+        <form (ngSubmit)="addMatch()" #addMatchForm="ngForm">
+          <div class="form-group">
+            <label>Gospodarz</label>
+            <input class="form-control" 
+                   type="text" 
+                   placeholder="Gospodarz"
+                   name="host"
+                   [(ngModel)]="addMatchModel.host" 
+                   required 
+                   #host="ngModel"/>
+          </div>
+          <div class="alert alert-danger" *ngIf="host.invalid">
+            <div *ngIf="host.errors.required">Pole jest wymagane.</div>
+          </div>
+          <div class="form-group">
+            <label>Gość</label>
+            <input class="form-control" 
+                   type="text" 
+                   placeholder="Gość" 
+                   name="guest"
+                   [(ngModel)]="addMatchModel.guest" 
+                   required 
+                   #guest="ngModel" />
+          </div>
+          <div class="alert alert-danger" *ngIf="guest.invalid">
+            <div *ngIf="host.errors.required">Pole jest wymagane.</div>
+          </div>
+          <div class="form-group">
+            <label>Grupa</label>
+            <input class="form-control" 
+                   type="text"
+                   placeholder="Grupa"
+                   name="grou["
+                   [(ngModel)]="addMatchModel.group"
+                   required
+                   #group="ngModel" />
+          </div>
+          <div class="alert alert-danger" *ngIf="group.invalid">
+            <div *ngIf="group.errors.required">Pole jest wymagane.</div>
+          </div>
+          <div class="form-group">
+            <label>Data rozpoczęcia (YYYY-MM-DD hh:mm)</label>
+            <input class="form-control" 
+                   type="datetime" 
+                   placeholeder="YYYY-MM-DD hh:mm" 
+                   name="beginTime" 
+                   [(ngModel)]="addMatchModel.beginTime"
+                   required 
+                   #beginTime="ngModel" />
+          </div>
+          <div class="alert alert-danger" *ngIf="beginTime.invalid">
+            <div *ngIf="beginTime.errors.required">Pole jest wymagane.</div>
+          </div>
+          <button class="btn btn-primary" [disabled]="!addMatchForm.form.valid">Zapisz</button>
+        </form>
+        <div class="alert alert-danger" *ngIf="addMatchResult.isError">
+          {{addMatchResult.errMsg}}
+        </div>
+        <div class="alert alert-success" *ngIf="addMatchResult.isSuccess">
+          {{addMatchResult.succMsg}}
+        </div>
+      </ng-template>
+    </ngb-tab>
+
+    <ngb-tab id="tab-selectbyid4" title="Ranking" *ngIf="tournamentModel.isParticipant">
+      <ng-template ngbTabContent>
+        <h4>Ranking</h4>
+        <div class="btn-container">
+          <button class="btn btn-primary" (click)="refreshRanking()" [disabled]="!actionReadiness.refreshRanking">Odśwież</button>
+        </div>
+        <div class="jackpot-container">
+          Pula: <span class="jackpot-value">{{tournamentModel.jackpot}}</span> WEI
+        </div>
+        <table class="table rank-table">
+          <thead>
+            <tr>
+              <th>Pozycja</th>
+              <th>Punkty</th>
+              <th>Nick</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let userRanking of participantsRankings; let i = index"
+              [ngClass]="{'current-user': userRanking.nick==userNick}">
+              <td>{{i + 1}}</td>
+              <td>{{userRanking.score}}</td>
+              <td>{{userRanking.nick}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-template>
+    </ngb-tab>
+
+    <ngb-tab id="tab-selectbyid5" title="Typowania graczy" *ngIf="tournamentModel.isParticipant">
+      <ng-template ngbTabContent>
+        <div class="alert alert-danger" *ngIf="getMatchesHistoryResult.isError">
+          {{getMatchesHistoryResult.errMsg}}
+        </div>
+        <h4>Typowania graczy</h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Użytkownik</th>
+              <th>Gospodarz</th>
+              <th>Gość</th>
+              <th>Wynik</th>
+              <th>Typ</th>
+              <th>Punkty</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let history of matchesHistory">
+              <td>{{history.match.beginDate | date: "dd-MM-yyyy HH:mm:ss"}}</td>
+              <td>{{history.nick}}</td>
+              <td>{{history.match.host}}</td>
+              <td>{{history.match.guest}}</td>
+              <td>{{history.match.hostScore}} : {{history.match.guestScore}}</td>
+              <td>{{history.bet.homeScore}} : {{history.bet.awayScore}}</td>
+              <td>{{history.bet.points}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>
+</div>
+
+<!-- End tournament modal -->
+<ng-template #endTournamentModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Zakończ turniej</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Czy na pewno chcesz zakończyć turniej ?</p>
+  </div>
+  <div class="modal-footer">
+    <form class="form-inline width-max">
+      <div class="width-max">
+        <button class="btn btn-primary" (click)="c('finish')">Zakończ</button>
+        <button class="btn btn-primary pull-right" (click)="d('Cross click')">Anuluj</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

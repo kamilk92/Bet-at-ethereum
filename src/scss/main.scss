@@ -1,0 +1,215 @@
+$content-width: 1024px;
+$background-color: linear-gradient(to bottom,#dadfe2 0%,#eceef0 25%,#f7f8f9 50%,#f0f2f3 75%,#d8dde0 100%);
+
+.background {
+  background-image: url("../assets/img/background.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-origin: content-box, padding-box;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: -1;
+  margin: 172px 0 0 0;
+  opacity: 0.6;
+}
+
+.logo{
+  color: #04517f;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 30px;
+}
+
+.header-container{
+  width: 100%;
+  background: $background-color;
+
+  .header{
+    margin: 0 auto;
+    padding: 30px 0 30px 0;
+    width: $content-width;
+  }
+}
+
+.top-menu-container{
+  width: 100%;
+  background: $background-color;
+  border-top: 1px solid silver;
+  padding: 5px 0 5px 0;
+
+  .top-menu{
+    margin: 0 auto;
+    width: $content-width;
+
+    .btn{
+      background-color: transparent;
+      color: black;
+    }
+
+    .navbar{
+      padding-left: 0;
+    }
+
+    .navbar-nav{
+      button{
+        padding: 0;
+      }
+
+      &:first-child{
+        width: 50%;
+      }
+
+      .nav-item{
+        .nav-link{
+          color: black;
+        }
+
+        &:first-child{
+          .nav-link{
+            padding-left: 0;
+          }
+        }        
+      }
+
+      div{
+        &:last-child{
+          position: absolute;
+          right: 0;
+        }
+      }
+    }
+  }
+}
+
+.content-container{
+  width: 100%;
+
+  .content{
+    padding: 10px 0 0 0;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    width: $content-width;
+
+    .card{
+      .btn-group{
+        padding: 20px;
+      }
+    }
+  }
+}
+
+.footer-container{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: $background-color;
+
+  .footer{
+    margin: 0 auto;
+    padding: 10px 0 10px 0;
+    width: $content-width;
+
+    .logo{
+      font-size: 10px;
+    }
+  }
+}
+
+.login-container{
+  width: 50%;
+  margin: 0 auto;
+  .card{
+    padding: 20px;
+    button{
+      width: 100%;
+      margin: 10px 0 10px 0;
+    }
+  }
+}
+
+.card-container{
+  .tab-content{
+    padding: 1rem;
+  }
+
+  .card{
+    .form-inline{
+      .form-control{
+        width: inherit;
+      }
+    }
+    form{
+      .alert{
+        margin: 10px 0 10px 0;
+      }
+    }
+  }
+}
+
+.match-row{
+  .form-group{
+    width: 100%;
+  }
+
+  .match-result {
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  .points-box {
+
+    width: 100%;
+
+    .points {
+      font-size: 35px;
+    }
+
+  }
+
+  .success{
+    background-color: green;
+    color: white;
+  }
+
+  .fail{
+    background-color: red;
+    color: white;
+  }
+}
+
+.btn-container{
+  button{
+    margin-bottom: 10px;
+  }
+}
+
+.current-user{
+  background-color: green;
+  color: white;
+  font-weight: bold;
+}
+
+.pull-right{
+  float: right;
+}
+
+.width-max{
+  width: 100%;
+}
+
+.jackpot-container{
+  background-color: green;
+  border: 1px solid;
+  border-radius: 5px;
+  color: white;
+  display: inline-block;
+  font-size: 20px;
+  margin: 0 0 10px 0;
+  padding: 20px;
+  
+  .jackpot-value{
+    font-size: 30px;
+    font-weight: bold;
+  }
+}

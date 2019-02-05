@@ -1,0 +1,133 @@
+.background {
+  background-image: url("../assets/img/background.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-origin: content-box, padding-box;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: -1;
+  margin: 172px 0 0 0;
+  opacity: 0.6; }
+
+.logo {
+  color: #04517f;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 30px; }
+
+.header-container {
+  width: 100%;
+  background: linear-gradient(to bottom, #dadfe2 0%, #eceef0 25%, #f7f8f9 50%, #f0f2f3 75%, #d8dde0 100%); }
+  .header-container .header {
+    margin: 0 auto;
+    padding: 30px 0 30px 0;
+    width: 1024px; }
+
+.top-menu-container {
+  width: 100%;
+  background: linear-gradient(to bottom, #dadfe2 0%, #eceef0 25%, #f7f8f9 50%, #f0f2f3 75%, #d8dde0 100%);
+  border-top: 1px solid silver;
+  padding: 5px 0 5px 0; }
+  .top-menu-container .top-menu {
+    margin: 0 auto;
+    width: 1024px; }
+    .top-menu-container .top-menu .btn {
+      background-color: transparent;
+      color: black; }
+    .top-menu-container .top-menu .navbar {
+      padding-left: 0; }
+    .top-menu-container .top-menu .navbar-nav button {
+      padding: 0; }
+    .top-menu-container .top-menu .navbar-nav:first-child {
+      width: 50%; }
+    .top-menu-container .top-menu .navbar-nav .nav-item .nav-link {
+      color: black; }
+    .top-menu-container .top-menu .navbar-nav .nav-item:first-child .nav-link {
+      padding-left: 0; }
+    .top-menu-container .top-menu .navbar-nav div:last-child {
+      position: absolute;
+      right: 0; }
+
+.content-container {
+  width: 100%; }
+  .content-container .content {
+    padding: 10px 0 0 0;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    width: 1024px; }
+    .content-container .content .card .btn-group {
+      padding: 20px; }
+
+.footer-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to bottom, #dadfe2 0%, #eceef0 25%, #f7f8f9 50%, #f0f2f3 75%, #d8dde0 100%); }
+  .footer-container .footer {
+    margin: 0 auto;
+    padding: 10px 0 10px 0;
+    width: 1024px; }
+    .footer-container .footer .logo {
+      font-size: 10px; }
+
+.login-container {
+  width: 50%;
+  margin: 0 auto; }
+  .login-container .card {
+    padding: 20px; }
+    .login-container .card button {
+      width: 100%;
+      margin: 10px 0 10px 0; }
+
+.card-container .tab-content {
+  padding: 1rem; }
+.card-container .card .form-inline .form-control {
+  width: inherit; }
+.card-container .card form .alert {
+  margin: 10px 0 10px 0; }
+
+.match-row .form-group {
+  width: 100%; }
+.match-row .match-result {
+  padding: 5px;
+  border-radius: 5px; }
+.match-row .points-box {
+  width: 100%; }
+  .match-row .points-box .points {
+    font-size: 35px; }
+.match-row .success {
+  background-color: green;
+  color: white; }
+.match-row .fail {
+  background-color: red;
+  color: white; }
+
+.btn-container button {
+  margin-bottom: 10px; }
+
+.current-user {
+  background-color: green;
+  color: white;
+  font-weight: bold; }
+
+.pull-right {
+  float: right; }
+
+.width-max {
+  width: 100%; }
+
+.jackpot-container {
+  background-color: green;
+  border: 1px solid;
+  border-radius: 5px;
+  color: white;
+  display: inline-block;
+  font-size: 20px;
+  margin: 0 0 10px 0;
+  padding: 20px; }
+  .jackpot-container .jackpot-value {
+    font-size: 30px;
+    font-weight: bold; }
+
+/*# sourceMappingURL=main.css.map */
